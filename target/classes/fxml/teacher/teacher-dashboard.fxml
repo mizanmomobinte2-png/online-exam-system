@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineexam.controller.TeacherDashboardController"
+            prefWidth="900" prefHeight="600" stylesheets="@/styles/style.css">
+    <left>
+        <VBox styleClass="sidebar" prefWidth="180" spacing="5">
+            <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+            <Label text="Teacher Portal" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Separator style="-fx-background-color: #34495e;"/>
+            <Button text="Dashboard" onAction="#goToDashboard" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button text="Create Exam" onAction="#goToCreateExam" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button text="My Exams" onAction="#goToMyExams" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button text="Results &amp; Reports" onAction="#goToResults" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Logout" onAction="#logout" styleClass="sidebar-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox alignment="TOP_LEFT" spacing="20">
+            <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+            <Label fx:id="welcomeLabel" text="Welcome, Teacher!" styleClass="form-title"/>
+            <Label text="Manage exams and view results from the sidebar." style="-fx-text-fill: #7f8c8d;"/>
+        </VBox>
+    </center>
+</BorderPane>

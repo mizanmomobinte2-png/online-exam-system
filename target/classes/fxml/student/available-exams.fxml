@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineexam.controller.AvailableExamsController"
+            prefWidth="900" prefHeight="600" stylesheets="@/styles/style.css">
+    <left>
+        <VBox styleClass="sidebar" prefWidth="180" spacing="5">
+            <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
+            <Label text="Student Portal" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Separator style="-fx-background-color: #34495e;"/>
+            <Button text="Dashboard" onAction="#goToDashboard" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button text="Available Exams" onAction="#goToAvailableExams" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Button text="My Results" onAction="#goToResults" styleClass="sidebar-button" maxWidth="Infinity"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Logout" onAction="#logout" styleClass="sidebar-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox alignment="TOP_LEFT" spacing="15">
+            <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+            <Label text="Available Exams" styleClass="form-title"/>
+            <TableView fx:id="examTable" prefHeight="400">
+                <columns>
+                    <TableColumn fx:id="titleCol" text="Exam Title" prefWidth="200"/>
+                    <TableColumn fx:id="durationCol" text="Duration (min)" prefWidth="100"/>
+                    <TableColumn fx:id="marksCol" text="Total Marks" prefWidth="100"/>
+                    <TableColumn fx:id="actionCol" text="Action" prefWidth="120"/>
+                </columns>
+            </TableView>
+            <Label fx:id="noExamsLabel" text="No exams available." visible="false"/>
+        </VBox>
+    </center>
+</BorderPane>
