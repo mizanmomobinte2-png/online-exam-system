@@ -15,6 +15,8 @@ public class TeacherDashboardController {
     public void initialize() {
         if (SessionManager.getCurrentTeacher() != null) {
             welcomeLabel.setText("Welcome, " + SessionManager.getCurrentTeacher().getFullName() + "!");
+        } else {
+            welcomeLabel.setText("Welcome!");
         }
     }
 

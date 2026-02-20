@@ -74,4 +74,53 @@ public class QuestionDao {
         q.setQuestionOrder(rs.getInt("question_order"));
         return q;
     }
+
+public Question findById(int questionId) {
+    String sql = "SELECT question_id, exam_id, question_text, option_a, option_b, option_c, option_d, correct_answer, marks, question_order " +
+            "FROM questions WHERE question_id = ?";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, questionId);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) return mapResultSet(rs);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+
+public void updateQuestion(Question q) {
+    String sql = "UPDATE questions SET question_text=?, option_a=?, option_b=?, option_c=?, option_d=?, correct_answer=?, marks=?, question_order=? " +
+            "WHERE question_id=?";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, q.getQuestionText());
+        stmt.setString(2, q.getOptionA());
+        stmt.setString(3, q.getOptionB());
+        stmt.setString(4, q.getOptionC());
+        stmt.setString(5, q.getOptionD());
+        stmt.setString(6, String.valueOf(q.getCorrectAnswer()));
+        stmt.setInt(7, q.getMarks());
+        stmt.setInt(8, q.getQuestionOrder());
+        stmt.setInt(9, q.getQuestionId());
+
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void deleteQuestion(int questionId) {
+    String sql = "DELETE FROM questions WHERE question_id = ?";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, questionId);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
 }

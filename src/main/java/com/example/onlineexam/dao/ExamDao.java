@@ -100,7 +100,7 @@ public class ExamDao {
     public void update(Exam exam) {
         String sql = "UPDATE exams SET title=?, description=?, duration_minutes=?, total_marks=?, passing_marks=?, status=?, start_time=?, end_time=? WHERE exam_id=?";
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, exam.getTitle());
             stmt.setString(2, exam.getDescription());
             stmt.setInt(3, exam.getDurationMinutes());
@@ -134,4 +134,38 @@ public class ExamDao {
         if (ct != null) e.setCreatedAt(ct.toLocalDateTime());
         return e;
     }
+
+
+public List<Exam> findAll() {
+    List<Exam> list = new ArrayList<>();
+    String sql = "SELECT exam_id, title, description, duration_minutes, total_marks, passing_marks, created_by, status, start_time, end_time, created_at " +
+            "FROM exams ORDER BY created_at DESC";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) list.add(mapResultSet(rs));
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
 }
+
+
+public void delete(int examId) {
+    String sql = "DELETE FROM exams WHERE exam_id = ?";
+    try (Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, examId);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+public void toggleActive(int examId, boolean active) {
+    updateStatus(examId, active ? ExamStatus.ACTIVE : ExamStatus.DRAFT);
+}
+
+
+}
+
+

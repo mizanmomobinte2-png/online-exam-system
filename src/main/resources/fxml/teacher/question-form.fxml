@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.onlineexam.controller.TeacherQuestionFormController"
+      spacing="10" padding="15" prefWidth="520">
+
+    <Label fx:id="titleLabel" text="Question" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+    <Label text="Question Text:"/>
+    <TextArea fx:id="questionText" prefRowCount="3"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Option A:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="optA" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Option B:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="optB" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Option C:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="optC" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Option D:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="optD" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Label text="Correct:"/>
+        <ComboBox fx:id="correct" prefWidth="90"/>
+        <Label text="Marks:"/>
+        <TextField fx:id="marks" prefWidth="80"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="errorLabel" text="" style="-fx-text-fill: red;"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Cancel" onAction="#cancel"/>
+        <Button text="Save" onAction="#save"/>
+    </HBox>
+
+</VBox>

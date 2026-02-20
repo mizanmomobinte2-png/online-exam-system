@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.onlineexam.controller.TeacherExamListController">
+
+    <top>
+        <HBox spacing="10" padding="15">
+            <Button text="← Dashboard" onAction="#goDashboard"/>
+            <Label text="Manage Exams (Teacher = Admin)" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Create Exam" onAction="#createExam"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" padding="15">
+            <TableView fx:id="table" prefHeight="520">
+                <columns>
+                    <TableColumn fx:id="colTitle" text="Title" prefWidth="240"/>
+                    <TableColumn fx:id="colDuration" text="Duration" prefWidth="90"/>
+                    <TableColumn fx:id="colTotal" text="Total" prefWidth="70"/>
+                    <TableColumn fx:id="colPass" text="Pass" prefWidth="70"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="320"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>

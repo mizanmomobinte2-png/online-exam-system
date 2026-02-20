@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import com.example.onlineexam.service.ExamService;
 
 public class CreateExamController {
 
@@ -35,6 +36,9 @@ public class CreateExamController {
     private final ObservableList<Question> questions = FXCollections.observableArrayList();
     private final ExamDao examDao = new ExamDao();
     private final QuestionDao questionDao = new QuestionDao();
+    private int editingExamId = -1;
+private final ExamService examService = new ExamService();
+
 
     @FXML
     public void initialize() {
@@ -54,6 +58,12 @@ public class CreateExamController {
             return cell;
         });
         questionsTable.setItems(questions);
+        editingExamId = TeacherNavState.getExamId();
+if (editingExamId > 0) {
+    loadForEdit(editingExamId);
+}
+
+        
     }
 
     @FXML
@@ -148,58 +158,7 @@ public class CreateExamController {
         }
     }
 
-    private void saveOrPublish(boolean publish) {
-        errorLabel.setVisible(false);
-        String title = titleField.getText().trim();
-        if (title.isEmpty()) {
-            showError("Exam title is required.");
-            return;
-        }
-        if (questions.isEmpty()) {
-            showError("Add at least one question.");
-            return;
-        }
-        int duration = 60, total = 100, passing = 40;
-        try {
-            if (!durationField.getText().trim().isEmpty()) duration = Integer.parseInt(durationField.getText().trim());
-            if (!totalMarksField.getText().trim().isEmpty()) total = Integer.parseInt(totalMarksField.getText().trim());
-            if (!passingMarksField.getText().trim().isEmpty()) passing = Integer.parseInt(passingMarksField.getText().trim());
-        } catch (NumberFormatException e) {
-            showError("Invalid numbers for duration/marks.");
-            return;
-        }
-        int sumMarks = questions.stream().mapToInt(Question::getMarks).sum();
-        if (sumMarks != total) {
-            total = sumMarks;
-        }
-
-        Exam exam = new Exam();
-        exam.setTitle(title);
-        exam.setDescription(descriptionField.getText().trim());
-        exam.setDurationMinutes(duration);
-        exam.setTotalMarks(total);
-        exam.setPassingMarks(passing);
-        exam.setCreatedBy(SessionManager.getCurrentTeacher().getTeacherId());
-        exam.setStatus(publish ? Exam.ExamStatus.ACTIVE : Exam.ExamStatus.DRAFT);
-
-        int examId = examDao.create(exam);
-        if (examId <= 0) {
-            showError("Failed to create exam.");
-            return;
-        }
-        for (int i = 0; i < questions.size(); i++) {
-            Question q = questions.get(i);
-            q.setExamId(examId);
-            q.setQuestionOrder(i);
-            questionDao.addQuestion(q);
-        }
-        new Alert(Alert.AlertType.INFORMATION, "Exam " + (publish ? "published" : "saved as draft") + " successfully.").showAndWait();
-        try {
-            SceneUtil.loadFXML("/fxml/teacher/my-exams.fxml", "My Exams");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  
 
     @FXML
     private void saveDraft() {
@@ -245,4 +204,93 @@ public class CreateExamController {
     private void hideError() {
         errorLabel.setVisible(false);
     }
+
+
+    private void loadForEdit(int examId) {
+    Exam e = examService.getExamWithQuestions(examId);
+    if (e == null) return;
+
+    titleField.setText(e.getTitle());
+    descriptionField.setText(e.getDescription());
+    durationField.setText(String.valueOf(e.getDurationMinutes()));
+    totalMarksField.setText(String.valueOf(e.getTotalMarks()));
+    passingMarksField.setText(String.valueOf(e.getPassingMarks()));
+
+    questions.clear();
+    if (e.getQuestions() != null) questions.addAll(e.getQuestions());
+}
+
+private void saveOrPublish(boolean publish) {
+    errorLabel.setVisible(false);
+
+    String title = titleField.getText().trim();
+    if (title.isEmpty()) { showError("Exam title is required."); return; }
+    if (questions.isEmpty()) { showError("Add at least one question."); return; }
+
+    int duration = 60, passing = 40;
+    try {
+        if (!durationField.getText().trim().isEmpty()) duration = Integer.parseInt(durationField.getText().trim());
+        if (!passingMarksField.getText().trim().isEmpty()) passing = Integer.parseInt(passingMarksField.getText().trim());
+    } catch (NumberFormatException e) {
+        showError("Invalid numbers for duration/pass marks.");
+        return;
+    }
+
+    int total = questions.stream().mapToInt(Question::getMarks).sum();
+    totalMarksField.setText(String.valueOf(total));
+
+    Exam exam = new Exam();
+    exam.setTitle(title);
+    exam.setDescription(descriptionField.getText().trim());
+    exam.setDurationMinutes(duration);
+    exam.setTotalMarks(total);
+    exam.setPassingMarks(passing);
+    exam.setCreatedBy(SessionManager.getCurrentTeacher().getTeacherId());
+    exam.setStatus(publish ? Exam.ExamStatus.ACTIVE : Exam.ExamStatus.DRAFT);
+
+    try {
+        examService.validateExam(exam, questions);
+    } catch (Exception ex) {
+        showError(ex.getMessage());
+        return;
+    }
+
+    if (editingExamId > 0) {
+        
+        exam.setExamId(editingExamId);
+        examDao.update(exam);
+
+        questionDao.deleteByExamId(editingExamId);
+        for (int i = 0; i < questions.size(); i++) {
+            Question q = questions.get(i);
+            q.setExamId(editingExamId);
+            q.setQuestionOrder(i);
+            questionDao.addQuestion(q);
+        }
+
+        new Alert(Alert.AlertType.INFORMATION, "Exam updated successfully.").showAndWait();
+
+    } else {
+        
+        int examId = examDao.create(exam);
+        if (examId <= 0) { showError("Failed to create exam."); return; }
+
+        for (int i = 0; i < questions.size(); i++) {
+            Question q = questions.get(i);
+            q.setExamId(examId);
+            q.setQuestionOrder(i);
+            questionDao.addQuestion(q);
+        }
+
+        new Alert(Alert.AlertType.INFORMATION, "Exam " + (publish ? "published" : "saved as draft") + " successfully.").showAndWait();
+    }
+
+    try {
+        TeacherNavState.setExamId(-1);
+        SceneUtil.loadFXML("/fxml/teacher/exam-list.fxml", "Manage Exams");
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
 }
