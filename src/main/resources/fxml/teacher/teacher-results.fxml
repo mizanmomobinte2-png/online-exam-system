@@ -1,43 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineexam.controller.TeacherResultsController"
-            prefWidth="900" prefHeight="600" stylesheets="@/styles/style.css">
-    <left>
-        <VBox styleClass="sidebar" prefWidth="180" spacing="5">
-            <padding><Insets top="20" right="10" bottom="20" left="10"/></padding>
-            <Label text="Teacher Portal" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
-            <Separator style="-fx-background-color: #34495e;"/>
-            <Button text="Dashboard" onAction="#goToDashboard" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Create Exam" onAction="#goToCreateExam" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="My Exams" onAction="#goToMyExams" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Button text="Results &amp; Reports" onAction="#goToResults" styleClass="sidebar-button" maxWidth="Infinity"/>
-            <Region VBox.vgrow="ALWAYS"/>
-            <Button text="Logout" onAction="#logout" styleClass="sidebar-button" maxWidth="Infinity"/>
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.onlineexam.controller.TeacherResultsController"
+            prefWidth="1450" prefHeight="900"
+            style="-fx-background-color: #f5f7fb;">
+
+    <children>
+
+        <!-- Sidebar -->
+        <VBox prefWidth="280"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0"
+              style="-fx-background-color: #24384f;">
+
+            <children>
+
+                <Label text="Teacher Portal"
+                       style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold; -fx-padding: 40 0 10 30;"/>
+
+                <Region prefHeight="10"/>
+                <Region style="-fx-background-color: rgba(255,255,255,0.35);" prefHeight="1" maxWidth="240"/>
+
+                <Label text="Dashboard"
+                       onMouseClicked="#goDashboard"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-padding: 30 0 0 50;"/>
+
+                <Label text="Create Exam"
+                       onMouseClicked="#goCreateExam"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-padding: 30 0 0 50;"/>
+
+                <Label text="My Exams"
+                       onMouseClicked="#goMyExams"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-padding: 30 0 0 50;"/>
+
+                <Label text="Results &amp; Reports"
+                       onMouseClicked="#goResults"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold; -fx-padding: 30 0 0 50;"/>
+
+                <Region VBox.vgrow="ALWAYS"/>
+
+                <Label text="Logout"
+                       onMouseClicked="#logout"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-padding: 0 0 40 50;"/>
+
+            </children>
         </VBox>
-    </left>
-    <center>
-        <VBox alignment="TOP_LEFT" spacing="15">
-            <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
-            <Label text="Results &amp; Reports" styleClass="form-title"/>
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Select Exam:"/>
-                <ComboBox fx:id="examCombo" prefWidth="300" onAction="#onExamSelected"/>
-                <Button text="Export to Excel" onAction="#exportToExcel" styleClass="secondary-button"/>
-            </HBox>
-            <TableView fx:id="resultsTable" prefHeight="350">
-                <columns>
-                    <TableColumn fx:id="studentCol" text="Student" prefWidth="200"/>
-                    <TableColumn fx:id="enrollmentCol" text="Enrollment" prefWidth="120"/>
-                    <TableColumn fx:id="scoreCol" text="Score" prefWidth="80"/>
-                    <TableColumn fx:id="totalCol" text="Total" prefWidth="80"/>
-                    <TableColumn fx:id="percentCol" text="%" prefWidth="80"/>
-                </columns>
-            </TableView>
-            <Label fx:id="statsLabel" text="" wrapText="true"/>
+
+        <!-- Main Content -->
+        <VBox spacing="20"
+              AnchorPane.topAnchor="35"
+              AnchorPane.leftAnchor="320"
+              AnchorPane.rightAnchor="35"
+              AnchorPane.bottomAnchor="35">
+
+            <children>
+
+                <Label text="Results &amp; Reports"
+                       style="-fx-text-fill: #223b58; -fx-font-size: 34; -fx-font-weight: bold;"/>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Select Exam:"
+                               style="-fx-text-fill: #2f4258; -fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                        <ComboBox fx:id="examComboBox"
+                                  prefWidth="380"
+                                  style="-fx-font-size: 15;"/>
+                    </children>
+                </HBox>
+
+                <Label fx:id="summaryLabel"
+                       text="Summary"
+                       style="-fx-text-fill: #5d6d7e; -fx-font-size: 16; -fx-font-weight: bold;"/>
+
+                <TableView fx:id="resultsTable"
+                           VBox.vgrow="ALWAYS"
+                           style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10;">
+
+                    <columns>
+                        <TableColumn fx:id="studentNameCol" text="Student Name" prefWidth="260"/>
+                        <TableColumn fx:id="scoreCol" text="Score" prefWidth="120"/>
+                        <TableColumn fx:id="totalCol" text="Total" prefWidth="120"/>
+                        <TableColumn fx:id="percentCol" text="Percentage" prefWidth="150"/>
+                        <TableColumn fx:id="statusCol" text="Status" prefWidth="140"/>
+                        <TableColumn fx:id="submittedAtCol" text="Submitted At" prefWidth="280"/>
+                    </columns>
+
+                </TableView>
+
+                <Label fx:id="noDataLabel"
+                       text="No data available."
+                       visible="false"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 16; -fx-padding: 10 0 0 5;"/>
+
+            </children>
         </VBox>
-    </center>
-</BorderPane>
+
+    </children>
+</AnchorPane>

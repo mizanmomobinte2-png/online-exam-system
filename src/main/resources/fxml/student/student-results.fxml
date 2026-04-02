@@ -24,12 +24,14 @@
             <Label text="My Results" styleClass="form-title"/>
             <TableView fx:id="resultsTable" prefHeight="400">
                 <columns>
-                    <TableColumn fx:id="examNameCol" text="Exam" prefWidth="250"/>
-                    <TableColumn fx:id="scoreCol" text="Score" prefWidth="80"/>
-                    <TableColumn fx:id="totalCol" text="Total" prefWidth="80"/>
-                    <TableColumn fx:id="percentCol" text="%" prefWidth="80"/>
-                    <TableColumn fx:id="dateCol" text="Date" prefWidth="150"/>
-                </columns>
+    <TableColumn fx:id="examNameCol" text="Exam" prefWidth="250"/>
+    <TableColumn fx:id="scoreCol" text="Score" prefWidth="80"/>
+    <TableColumn fx:id="totalCol" text="Total" prefWidth="80"/>
+    <TableColumn fx:id="percentCol" text="percent" prefWidth="80"/>
+    <TableColumn fx:id="dateCol" text="Date" prefWidth="150"/>
+    <TableColumn fx:id="reviewCol" text="Review" prefWidth="120"/>
+</columns>
+
             </TableView>
             <Label fx:id="noResultsLabel" text="No results yet." visible="false"/>
         </VBox>

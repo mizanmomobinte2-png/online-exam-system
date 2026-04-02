@@ -166,6 +166,14 @@ public class TakeExamController {
         }
     }
 
+    @FXML
+private void startExam() {
+    try {
+        SceneUtil.loadFXML("/fxml/exam_screen.fxml", "Exam");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     private void doSubmit() {
         if (timer != null) timer.stop();
         saveCurrentAnswer();
